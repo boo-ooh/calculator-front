@@ -1,12 +1,14 @@
 import { SearchOutlined } from "@ant-design/icons";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import Highlighter from "react-highlight-words";
 import type { InputRef } from "antd";
 import { Button, Divider, Input, Space, Table } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
+import { useApi } from "../../hooks/useApi";
+import { OperationsContext } from "../../contexts/Operations/OperationContext";
 
-interface RecordType {
+export interface RecordType {
   id: number;
   operation: string;
   amount: number;
@@ -17,125 +19,25 @@ interface RecordType {
 
 type DataIndex = keyof RecordType;
 
-const data: RecordType[] = [
-  {
-    id: 1,
-    operation: "addition",
-    amount: 5,
-    userBalance: 995,
-    operationResponse: "44",
-    date: new Date().toISOString(),
-  },
-  {
-    id: 2,
-    operation: "subtraction",
-    amount: 5,
-    userBalance: 990,
-    operationResponse: "4",
-    date: new Date().toISOString(),
-  },
-  {
-    id: 3,
-    operation: "division",
-    amount: 10,
-    userBalance: 980,
-    operationResponse: "55",
-    date: new Date().toISOString(),
-  },
-  {
-    id: 4,
-    operation: "square_root",
-    amount: 15,
-    userBalance: 965,
-    operationResponse: "2",
-    date: new Date().toISOString(),
-  },
-  {
-    id: 4,
-    operation: "square_root",
-    amount: 15,
-    userBalance: 965,
-    operationResponse: "2",
-    date: new Date().toISOString(),
-  },
-  {
-    id: 4,
-    operation: "square_root",
-    amount: 15,
-    userBalance: 965,
-    operationResponse: "2",
-    date: new Date().toISOString(),
-  },
-  {
-    id: 4,
-    operation: "square_root",
-    amount: 15,
-    userBalance: 965,
-    operationResponse: "2",
-    date: new Date().toISOString(),
-  },
-  {
-    id: 4,
-    operation: "square_root",
-    amount: 15,
-    userBalance: 965,
-    operationResponse: "2",
-    date: new Date().toISOString(),
-  },
-  {
-    id: 4,
-    operation: "square_root",
-    amount: 15,
-    userBalance: 965,
-    operationResponse: "2",
-    date: new Date().toISOString(),
-  },
-  {
-    id: 4,
-    operation: "square_root",
-    amount: 15,
-    userBalance: 965,
-    operationResponse: "2",
-    date: new Date().toISOString(),
-  },
-  {
-    id: 4,
-    operation: "square_root",
-    amount: 15,
-    userBalance: 965,
-    operationResponse: "2",
-    date: new Date().toISOString(),
-  },
-  {
-    id: 4,
-    operation: "square_root",
-    amount: 15,
-    userBalance: 965,
-    operationResponse: "2",
-    date: new Date().toISOString(),
-  },
-  {
-    id: 4,
-    operation: "square_root",
-    amount: 15,
-    userBalance: 965,
-    operationResponse: "2",
-    date: new Date().toISOString(),
-  },
-  {
-    id: 4,
-    operation: "square_root",
-    amount: 15,
-    userBalance: 965,
-    operationResponse: "2",
-    date: new Date().toISOString(),
-  },
-];
-
 const BalanceTable: React.FC = () => {
+  const [data, setData] = useState<[RecordType] | []>([]);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef<InputRef>(null);
+  const api = useApi();
+  const operationsCtx = useContext(OperationsContext);
+
+  useEffect(() => {
+    api.getUserRecords().then((res) => {
+      setData(res);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    setData(operationsCtx.recordData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [operationsCtx.recordData]);
 
   const handleSearch = (
     selectedKeys: string[],

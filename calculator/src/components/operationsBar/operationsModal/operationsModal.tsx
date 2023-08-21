@@ -1,8 +1,9 @@
 import { Modal } from "antd";
 import { OpTypes, Operation } from "../../../types/Operation";
 import { InputNumber } from "antd";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useApi } from "../../../hooks/useApi";
+import { OperationsContext } from "../../../contexts/Operations/OperationContext";
 
 type OperationsModalProps = {
   operation: Operation | null;
@@ -18,6 +19,7 @@ const OperationsModal: React.FC<OperationsModalProps> = (props) => {
   const [paramTwo, setParamTwo] = useState<number>(0);
   const [resultModal, contextHolder] = Modal.useModal();
   const api = useApi();
+  const operationsCtx = useContext(OperationsContext);
 
   const handleCancel = () => {
     props.setIsModalOpen(false);
@@ -46,22 +48,19 @@ const OperationsModal: React.FC<OperationsModalProps> = (props) => {
       cancelText: "No",
       onOk: async () => {
         props.setIsModalOpen(false);
-        console.log("Call API to " + props.operation?.displayName);
         if (props.operation != null) {
-          const response = await api.performOperation(
-            props.operation,
-            paramOne,
-            paramTwo
-          );
-          resultModal.info({
-            title: "Your result:",
-            content: <h2>{response}</h2>,
-          });
+          api
+            .performOperation(props.operation, paramOne, paramTwo)
+            .then((response) => {
+              resultModal.info({
+                title: "Your result:",
+                content: <h2>{response}</h2>,
+              });
+              operationsCtx.updateOperations();
+            });
         }
       },
-      onCancel: () => {
-        console.log("Cancel");
-      },
+      onCancel: () => {},
     });
   };
 

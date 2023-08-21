@@ -18,8 +18,16 @@ export const useApi = () => ({
     });
     return response.data;
   },
-  getUserRecords: async (userId: number) => {
-    const response = await api.get("/record?user-id?" + userId, {
+  getUserCredit: async () => {
+    const response = await api.get("/record/credit", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    return response.data;
+  },
+  getUserRecords: async () => {
+    const response = await api.get("/record", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -40,7 +48,6 @@ export const useApi = () => ({
         },
       }
     );
-    console.log(response.data);
     return response.data.result;
   },
 });

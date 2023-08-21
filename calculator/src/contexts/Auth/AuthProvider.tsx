@@ -10,9 +10,7 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   const navigate = useNavigate();
 
   const signIn = async (username: string, password: string) => {
-    console.log("signIn:" + username + "/" + password);
     const data = await api.signIn(username, password);
-    console.log(data);
     if (data.token) {
       setUser(data.user);
       localStorage.setItem("token", data.token);

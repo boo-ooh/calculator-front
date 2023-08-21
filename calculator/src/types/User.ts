@@ -3,5 +3,4 @@ export type User = {
   username: string;
   password: string;
   status: string;
-  balance: number;
 };
