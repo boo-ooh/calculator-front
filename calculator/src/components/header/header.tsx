@@ -1,23 +1,26 @@
 import { Button, Tooltip } from "antd";
 import "./header.css";
 import { LogoutOutlined } from "@ant-design/icons";
+import { useContext } from "react";
+import { AuthContext } from "../../contexts/Auth/AuthContext";
 
-interface HeaderProps {
-  username: string;
-}
-
-export function Header({ username }: HeaderProps) {
+export function Header() {
+  const auth = useContext(AuthContext);
   return (
     <div className="header">
       <div className="header-text">
-        <h1>
-          Welcome <b>{username}</b>!
-        </h1>
-        <h2>Your credit is $50</h2>
+        <h1>Welcome {auth.user?.username}!</h1>
+        <h2>Your credit is ${auth.user?.balance.toFixed(2)}</h2>
       </div>
       <div className="header-logout">
         <Tooltip title="logout">
-          <Button type="text" icon={<LogoutOutlined />}>
+          <Button
+            type="text"
+            icon={<LogoutOutlined />}
+            onClick={() => {
+              auth.signOut();
+            }}
+          >
             Logout
           </Button>
         </Tooltip>
