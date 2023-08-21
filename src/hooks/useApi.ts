@@ -2,7 +2,7 @@ import axios from "axios";
 import { Operation } from "../types/Operation";
 
 const api = axios.create({
-  baseURL: "http://ec2-3-140-196-210.us-east-2.compute.amazonaws.com:8080",
+  baseURL: "https://ec2-3-140-196-210.us-east-2.compute.amazonaws.com:8080",
 });
 
 export const useApi = () => ({
