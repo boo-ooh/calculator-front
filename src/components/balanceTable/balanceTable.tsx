@@ -185,7 +185,7 @@ const BalanceTable: React.FC = () => {
   return (
     <>
       <Divider>Your balance</Divider>
-      <Table columns={columns} dataSource={data} />
+      <Table columns={columns} dataSource={data} rowKey={"id"} />
     </>
   );
 };
