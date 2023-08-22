@@ -10,15 +10,17 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   const navigate = useNavigate();
 
   const signIn = async (username: string, password: string) => {
-    const data = await api.signIn(username, password);
-    if (data.token) {
-      setUser(data.user);
-      localStorage.setItem("token", data.token);
-      navigate("/home");
-      return true;
+    try {
+      const data = await api.signIn(username, password);
+      if (data.token) {
+        setUser(data.user);
+        localStorage.setItem("token", data.token);
+        navigate("/home");
+        return true;
+      }
+    } catch (error) {
+      return false;
     }
-    navigate("/");
-    return false;
   };
 
   const signOut = async () => {
@@ -28,7 +30,7 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, signIn, signOut, setUser }}>
       {children}
     </AuthContext.Provider>
   );

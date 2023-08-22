@@ -10,6 +10,14 @@ export const useApi = () => ({
     const response = await api.post("/auth/login", { username, password });
     return response.data;
   },
+  validateToken: async () => {
+    const response = await api.get("/auth/validateToken", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    return response.data;
+  },
   getOperations: async () => {
     const response = await api.get("/operation", {
       headers: {

@@ -21,7 +21,6 @@ export function Header() {
   }, []);
 
   useEffect(() => {
-    console.log(operationCtx.balance);
     setUserCredit(operationCtx.balance);
   }, [operationCtx.balance]);
 

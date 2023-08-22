@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, Modal } from "antd";
 // import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/Auth/AuthContext";
 import { useContext } from "react";
@@ -11,17 +11,17 @@ type FieldType = {
 
 const Login: React.FC = () => {
   const auth = useContext(AuthContext);
+  const [errorModal, contextHolder] = Modal.useModal();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onFinish = async (values: any) => {
-    console.log("Success:", values);
-    // const isLogged = await
-    auth.signIn(values.username, values.password);
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
+    const success = await auth.signIn(values.username, values.password);
+    if (!success) {
+      errorModal.error({
+        title: "Error",
+        content: <h2>Could not log you in, verify credentials.</h2>,
+      });
+    }
   };
 
   return (
@@ -32,7 +32,6 @@ const Login: React.FC = () => {
       style={{ maxWidth: 600 }}
       initialValues={{ remember: true }}
       onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
       <Form.Item<FieldType>
@@ -56,6 +55,7 @@ const Login: React.FC = () => {
           Submit
         </Button>
       </Form.Item>
+      {contextHolder}
     </Form>
   );
 };

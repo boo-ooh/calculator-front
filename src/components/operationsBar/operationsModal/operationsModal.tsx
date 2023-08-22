@@ -57,6 +57,12 @@ const OperationsModal: React.FC<OperationsModalProps> = (props) => {
                 content: <h2>{response}</h2>,
               });
               operationsCtx.updateOperations();
+            })
+            .catch((error) => {
+              resultModal.error({
+                title: "Error",
+                content: <h2>{error.response.data}</h2>,
+              });
             });
         }
       },

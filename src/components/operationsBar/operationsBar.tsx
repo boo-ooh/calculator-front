@@ -34,10 +34,10 @@ const OperationsBar: React.FC = () => {
       />
       <Space>
         {operationsList.map((op: Operation) => (
-          <Tooltip title={"$" + op.cost}>
+          <Tooltip title={"$" + op.cost} key={op.id}>
             <Button
-              key={op.id}
               type="primary"
+              key={op.type}
               onClick={() => handleOperation(op)}
             >
               {op.displayName}
