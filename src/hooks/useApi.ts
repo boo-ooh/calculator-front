@@ -42,6 +42,14 @@ export const useApi = () => ({
     });
     return response.data;
   },
+  deleteUserRecord: async (recordId: number) => {
+    const response = await api.delete("/record/" + recordId, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    return response.data;
+  },
   performOperation: async (
     operation: Operation,
     paramOne: number,

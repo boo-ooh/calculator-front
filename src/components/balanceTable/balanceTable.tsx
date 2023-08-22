@@ -2,7 +2,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import React, { useRef, useState, useEffect, useContext } from "react";
 import Highlighter from "react-highlight-words";
 import type { InputRef } from "antd";
-import { Button, Divider, Input, Space, Table } from "antd";
+import { Button, Divider, Input, Modal, Space, Table, Tooltip } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
 import { useApi } from "../../hooks/useApi";
@@ -26,6 +26,7 @@ const BalanceTable: React.FC = () => {
   const searchInput = useRef<InputRef>(null);
   const api = useApi();
   const operationsCtx = useContext(OperationsContext);
+  const [infoModal, contextHolder] = Modal.useModal();
 
   useEffect(() => {
     api.getUserRecords().then((res) => {
@@ -180,12 +181,55 @@ const BalanceTable: React.FC = () => {
       key: "date",
       ...getColumnSearchProps("date"),
     },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Tooltip title="A deleted record will no longer be displayed, but the amount expended won't return as credit!">
+            <a
+              onClick={() => {
+                handleDelete(record);
+              }}
+            >
+              Delete
+            </a>
+          </Tooltip>
+        </Space>
+      ),
+    },
   ];
+
+  const handleDelete = (record: RecordType) => {
+    Modal.confirm({
+      title: "Delete",
+      content: "Are you sure you want to delete operation record?",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
+      onOk: async () => {
+        api
+          .deleteUserRecord(record.id)
+          .then(() => {
+            operationsCtx.updateOperations();
+          })
+          .catch((error) => {
+            console.log(error);
+            infoModal.error({
+              title: "Error",
+              content: <h4>Operation was not deleted. Try again later.</h4>,
+            });
+          });
+      },
+      onCancel: () => {},
+    });
+  };
 
   return (
     <>
       <Divider>Your balance</Divider>
       <Table columns={columns} dataSource={data} rowKey={"id"} />
+      {contextHolder}
     </>
   );
 };
