@@ -1,7 +1,7 @@
 import { Modal } from "antd";
 import { OpTypes, Operation } from "../../../types/Operation";
 import { InputNumber } from "antd";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useApi } from "../../../hooks/useApi";
 import { OperationsContext } from "../../../contexts/Operations/OperationContext";
 
@@ -20,6 +20,11 @@ const OperationsModal: React.FC<OperationsModalProps> = (props) => {
   const [resultModal, contextHolder] = Modal.useModal();
   const api = useApi();
   const operationsCtx = useContext(OperationsContext);
+
+  useEffect(() => {
+    setParamOne(0);
+    setParamTwo(0);
+  }, [props.isModalOpen]);
 
   const handleCancel = () => {
     props.setIsModalOpen(false);
@@ -95,13 +100,13 @@ const OperationsModal: React.FC<OperationsModalProps> = (props) => {
         <div className="parameters">
           {!isZeroParametersOp() && (
             <div>
-              <InputNumber defaultValue={0} onChange={onChangeOne} />
+              <InputNumber value={paramOne} onChange={onChangeOne} />
             </div>
           )}
           {!isZeroParametersOp() && !isOneParameterOp() && (
             <div>
               <h4>AND</h4>
-              <InputNumber defaultValue={0} onChange={onChangeTwo} />
+              <InputNumber value={paramTwo} onChange={onChangeTwo} />
             </div>
           )}
         </div>
