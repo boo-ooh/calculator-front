@@ -19,7 +19,6 @@ const OperationsBar: React.FC = () => {
   }, []);
 
   const handleOperation = (operation: Operation) => {
-    console.log("Perform: " + operation.type);
     setOperation(operation);
     setIsModalOpen(true);
   };
